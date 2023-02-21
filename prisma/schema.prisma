@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Administrator {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  updateAt  DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model Problems {
+  problem_id                 Int                          @id @default(autoincrement())
+  problem_description        String
+  problem_why                String
+  // Associative_Problem_Status Associative_Problem_Status[]
+  fk_status Problem_Status @relation(fields: [problem_status_id], references: [problem_status_id])
+  problem_status_id Int
+  updateAt                      DateTime       @updatedAt
+  createdAt                     DateTime       @default(now())
+}
+
+model Problem_Status {
+  problem_status_id          Int                          @id @default(autoincrement())
+  problem_status_label       String
+  Problems Problems[]
+  // Associative_Problem_Status Associative_Problem_Status[]
+}
+
+// model Associative_Problem_Status {
+//   id                            Int            @id @default(autoincrement())
+//   fk_problem                    Problems       @relation(fields: [associative_problem_id], references: [problem_id])
+//   associative_problem_id        Int
+//   fk_status                     Problem_Status @relation(fields: [associative_problem_status_id], references: [problem_status_id])
+//   associative_problem_status_id Int
+//   updateAt                      DateTime       @updatedAt
+//   createdAt                     DateTime       @default(now())
+// }
